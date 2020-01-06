@@ -98,7 +98,6 @@ def calAlignment(A, B, L, oploc):
                 i -= 1
                 
     return reverse(FinalA), reverse(FinalB)
-        
 
 def FindMaxScore(A, B, delta):
     # To track the best score
