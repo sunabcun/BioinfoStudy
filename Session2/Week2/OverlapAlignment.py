@@ -62,8 +62,8 @@ def FindMaxScore(A, B, costs):
             Maxscore = max(F[i-1][j-1] + cost, F[i][j-1] + gap, F[i-1][j] + gap)
             F[i][j] = Maxscore
             # Max score in bottom row of the shorter string
-            if F[-1][j] > best:
-                best = F[-1][j]
+            if F[i][-1] > best:
+                best = F[i][-1]
                 optloc = (i, j)
             
             #Set L matrix
@@ -73,8 +73,8 @@ def FindMaxScore(A, B, costs):
                 L[i][j] = 2 #2 == "Left, B gap"
             else:
                 L[i][j] = 3 #3 == "Up, A gap"
-    #for item in L:
-     #   print (item)
+    for item in F:
+        print (item)
     # Return the opt score and the best location
     return L, best, optloc
 
@@ -95,7 +95,7 @@ for item in num:
 costs = tuple(costs)
 
 L, best, oploc = FindMaxScore(A, B, costs)
-print (best)
+print (best, oploc)
 FinalA, FinalB, = calAlignment(A, B, L, oploc)
 print (FinalA)
 print (FinalB)
