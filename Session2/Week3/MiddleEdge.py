@@ -82,7 +82,6 @@ def MiddleEdge(A, B, delta):
     # Create F matrix for scoring
     F = create_matrix(LenA + 1, LenB + 1)
     
-
     # Fill the F matrix with indel penalty
     for i in range(1, LenA + 1):
         F[i][0] = (delta*i, 0)
@@ -111,11 +110,13 @@ def MiddleEdge(A, B, delta):
     i, j = len(A), len(B)
     
     while j >= mid:
-        if j == mid:
-            Mid_node = (i, j)
         if j == mid + 1:
             Previous = (i, j)
-        #print(i, j, F[i][j][0], F[i][j][1])
+            
+        if j == mid:
+            Mid_node = (i, j)
+            return Mid_node, Previous
+
         if F[i][j][1] == fromD:
             i -= 1
             j -= 1
@@ -123,23 +124,7 @@ def MiddleEdge(A, B, delta):
             i -= 1
         else:
             j -= 1
-        
-    #while LenB >= mid:
-        
-     #   if LenB == mid:
-      #      Mid_node = (LenA, LenB)
-       # if LenB == mid + 1:
-        #    Previous = (LenA, LenB)
-            
-       # if F[LenA][LenB][1] == fromD:
-        #    LenB -= 1
-         #   LenA -= 1
-        #elif F[LenA][LenB][1] == fromU:
-         #   LenA -= 1
-        #else:
-         #   LenB -= 1
-       
-    
+      
     return Mid_node, Previous
 
 
