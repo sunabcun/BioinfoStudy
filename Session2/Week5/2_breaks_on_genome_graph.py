@@ -1,5 +1,4 @@
 def TwoBreakOnGenomeGraph(GenomeGraph, i1 , i2 , i3 , i4):
-    NewGraph = GenomeGraph
     if i1 > i3:
         temp1, temp3 = i1, i3
         i1, i3 = i2, i4
