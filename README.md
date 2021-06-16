@@ -2,7 +2,12 @@
 
 Coursera/Stepik course assignments.
 # Data structure
+## Week1
+- Extending_stack_interface.py
+- Max_in_sliding_window.py
+- Network_packet_processing_simulation.py
 
+## Week2
 
 
 # 1. Bioinformatics session1 
