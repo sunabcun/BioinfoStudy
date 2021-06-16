@@ -59,9 +59,13 @@ Coursera/Stepik course assignments.
 - LocalAlignment.py
 - OverlapAlignment.py
 
-# Week 3
+## Week3
 - AffineGapPenalties.py
 - MiddleEdge.py
 - MultipleSequenceAlignmentpy.py
 - SpaceEfficientSequenceAlignment.py
 - linearspace.py
+
+## Week4
+- GreedySorting.py
+- NumberOfBreakpoints.py
