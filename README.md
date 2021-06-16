@@ -1,8 +1,11 @@
 # BioinfoStudy
 
 Coursera/Stepik course assignments.
+# Data structure
 
-# 1. Session1 
+
+
+# 1. Bioinformatics session1 
 ## WEEK1
 - FrequentWordsproblem.py
 - Skew.py
@@ -36,7 +39,7 @@ Coursera/Stepik course assignments.
 - GibbsSampler.py
 - RandomizedMotifSearch.py
 
-# Session2
+# Bioinformatics Session2
 ## Week1
 - Backtrack.py
 - DPChange.py
