@@ -21,3 +21,13 @@ Coursera/Stepik course assignments.
 - Frequentwordswithmismatches.py
 - Hamming.py
 - Neighbors.py
+
+# 3. Session1 (Week3)
+- Calculate_entropy.py
+- DistanceBetweenPatternAndStrings.py
+- GreedyCalculate.py
+- GreedyMotifSearch.py
+- MedianString.py
+- MedianString_new.py
+- Motifenumeration.py
+
