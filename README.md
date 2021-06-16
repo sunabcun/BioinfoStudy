@@ -21,6 +21,14 @@ Coursera/Stepik course assignments.
 - phone_book.py
 - substring_equality.py
 
+## Week4
+- isBST_h.py
+- is_BST.py
+- rope.py
+- set_with_range_sums.py
+- set_with_range_sums_try.py
+- traversal.py
+
 # 1. Bioinformatics session1 
 ## WEEK1
 - FrequentWordsproblem.py
