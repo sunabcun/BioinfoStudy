@@ -2,7 +2,8 @@
 
 Coursera/Stepik course assignments.
 
-# 1. Session1 (WEEK1)
+# 1. Session1 
+## WEEK1
 - FrequentWordsproblem.py
 - Skew.py
 - clumpfinding.py
@@ -17,12 +18,12 @@ Coursera/Stepik course assignments.
 - patnum.py
 - slidingwindow.py
 
-# 2. Session1 (Week2)
+## Week2
 - Frequentwordswithmismatches.py
 - Hamming.py
 - Neighbors.py
 
-# 3. Session1 (Week3)
+## Week3
 - Calculate_entropy.py
 - DistanceBetweenPatternAndStrings.py
 - GreedyCalculate.py
@@ -30,4 +31,8 @@ Coursera/Stepik course assignments.
 - MedianString.py
 - MedianString_new.py
 - Motifenumeration.py
+
+## Week4
+- GibbsSampler.py
+- RandomizedMotifSearch.py
 
