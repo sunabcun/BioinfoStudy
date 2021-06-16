@@ -49,3 +49,13 @@ Coursera/Stepik course assignments.
 - maxdis_maxpath.py
 - maxheap.py
 - shortest.py
+
+## Week2
+- FittingAlignment.py
+- GlobalAlignment.py
+- GlobalAlignment_test.py
+- GlobalAlignment_test2.py
+- LevenshteinDistance.py
+- LocalAlignment.py
+- OverlapAlignment.py
+
