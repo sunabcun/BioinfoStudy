@@ -69,3 +69,14 @@ Coursera/Stepik course assignments.
 ## Week4
 - GreedySorting.py
 - NumberOfBreakpoints.py
+
+## Week5
+- 2_Break Sorting Problem.py
+- 2_break_Distance Problem.py
+- 2_break_on_genome.py
+- 2_breaks_on_genome_graph.py
+- ChromosomeToCycle.py
+- ColoredEdges.py
+- CycleToChromosome.py
+- GraphToGenome.py
+- find_shared_kmers.py
