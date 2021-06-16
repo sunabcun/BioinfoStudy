@@ -2,7 +2,7 @@
 
 Coursera/Stepik course assignments.
 
-# 1. Session1
+# 1. Session1 (WEEK1)
 - FrequentWordsproblem.py
 - Skew.py
 - clumpfinding.py
@@ -16,3 +16,8 @@ Coursera/Stepik course assignments.
 - kmer.py
 - patnum.py
 - slidingwindow.py
+
+# 2. Session1 (Week2)
+- Frequentwordswithmismatches.py
+- Hamming.py
+- Neighbors.py
