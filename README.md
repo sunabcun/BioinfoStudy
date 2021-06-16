@@ -14,7 +14,12 @@ Coursera/Stepik course assignments.
 - parallel_processing.py
 
 ## Week3
-
+- hash_substring.py
+- hashing_with_chains.py
+- longest_common_substring.py
+- pattern_matching_with_mistakes.py
+- phone_book.py
+- substring_equality.py
 
 # 1. Bioinformatics session1 
 ## WEEK1
