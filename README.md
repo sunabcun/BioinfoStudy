@@ -7,7 +7,13 @@ Coursera/Stepik course assignments.
 - Max_in_sliding_window.py
 - Network_packet_processing_simulation.py
 
-## Week2
+## Week3
+- build_heap.py
+- disjoint_set.py
+- merge_table.py
+- parallel_processing.py
+
+## Week4
 
 
 # 1. Bioinformatics session1 
