@@ -36,3 +36,16 @@ Coursera/Stepik course assignments.
 - GibbsSampler.py
 - RandomizedMotifSearch.py
 
+# Session2
+## Week1
+- Backtrack.py
+- DPChange.py
+- LCSBackTrack.py
+- LongestPath.py
+- ManhattanTourist.py
+- RecursiveChange.py
+- TopologicalSorting.py
+- WeightedLongestPath.py
+- maxdis_maxpath.py
+- maxheap.py
+- shortest.py
