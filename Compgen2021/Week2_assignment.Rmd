@@ -1,0 +1,248 @@
+---
+title: 'compgen2021: Week 2 exercises'
+author: 'Yuna Son'
+output:
+  pdf_document: default
+  pdf: default
+---
+
+# Exercises for Week2
+
+For this set of exercises we will be using the expression data shown below:
+```{r}
+expFile=system.file("extdata",
+                    "leukemiaExpressionSubset.rds",
+                    package="compGenomRData")
+mat=readRDS(expFile)
+```
+
+### Clustering
+
+1. We want to observe the effect of data transformation in this exercise. Scale the expression matrix with the `scale()` function. In addition, try taking the logarithm of the data with the `log2()` function prior to scaling. Make box plots of the unscaled and scaled data sets using the `boxplot()` function. [Difficulty: **Beginner/Intermediate**]
+
+**solution:**
+
+```{r}
+# Plot the unscaled data
+p1 <- boxplot(mat, main = "Boxplot of the unscaled expression matrix")
+
+# scale the expression matrix
+scaled_exp = scale(mat)
+p2 <- boxplot(scaled_exp, main = "Boxplot of the scaled expression matrix")
+
+# log2 processing before scaling
+log2_exp = log2(mat)
+scaled_exp2 = scale(log2_exp)
+p3 <- boxplot(scaled_exp2, main = "Boxplot of the log2 & scaled expression matrix")
+```
+
+2. For the same problem above using the unscaled data and different data transformation strategies, use the `ward.d` distance in hierarchical clustering and plot multiple heatmaps. You can try to use the `pheatmap` library or any other library that can plot a heatmap with a dendrogram. Which data-scaling strategy provides more homogeneous clusters with respect to disease types? [Difficulty: **Beginner/Intermediate**]
+
+**solution:**
+```{r}
+library(pheatmap)
+colnames(mat)
+
+# set the leukemia type annotation for each sample
+annotation_col = data.frame(
+                    LeukemiaType =substr(colnames(mat),1,3))
+rownames(annotation_col)=colnames(mat)
+ 
+# Without any scaling
+pheatmap(mat,show_rownames=FALSE,show_colnames=FALSE,
+         annotation_col=annotation_col,
+         scale = "none",clustering_method="ward.D",
+         clustering_distance_cols="euclidean")
+
+
+# Heatmap after Scaling
+pheatmap(scaled_exp,show_rownames=FALSE,show_colnames=FALSE,
+         annotation_col=annotation_col,
+         scale = "none",clustering_method="ward.D",
+         clustering_distance_cols="euclidean")
+
+# Heatmap after log2 and scaling
+pheatmap(scaled_exp2,show_rownames=FALSE,show_colnames=FALSE,
+         annotation_col=annotation_col,
+         scale = "none",clustering_method="ward.D",
+         clustering_distance_cols="euclidean")
+```
+Non-scaled heatmap showed the poor clustering compared to others since we can see CML and NoL are mixed. Also, log2 and scaled heatmap showed more better differential gene expression profiles specifically among ALL, AML, CLL groups (more distinct red colors of different profiles in each group). 
+
+3. For the transformed and untransformed data sets used in the exercise above, use the silhouette for deciding number of clusters using hierarchical clustering. [Difficulty: **Intermediate/Advanced**]
+
+**solution:**
+```{r}
+library(cluster)
+set.seed(101)
+
+# calculate the average silhouette value for different k-values in untransformed data.
+Ks=sapply(2:7,
+    function(i) 
+      summary(silhouette(pam(t(mat),k=i)))$avg.width)
+plot(2:7,Ks,xlab="k",ylab="av. silhouette",type="b",
+     pch=19)
+
+
+# calculate the average silhouette value for different k-values in scaled data.
+Ks=sapply(2:7,
+    function(i) 
+      summary(silhouette(pam(t(scaled_exp),k=i)))$avg.width)
+plot(2:7,Ks,xlab="k",ylab="av. silhouette",type="b",
+     pch=19)
+
+# calculate the average silhouette value for different k-values in log2/scaled transformed data.
+Ks=sapply(2:7,
+    function(i) 
+      summary(silhouette(pam(t(scaled_exp2),k=i)))$avg.width)
+plot(2:7,Ks,xlab="k",ylab="av. silhouette",type="b",
+     pch=19)
+```
+It seems that k = 4 is the best value for clustering.
+
+4. Now, use the Gap Statistic for deciding the number of clusters in hierarchical clustering. Is the same number of clusters identified by two methods? Is it similar to the number of clusters obtained using the k-means algorithm in the unsupervised learning chapter. [Difficulty: **Intermediate/Advanced**]
+
+```{r}
+library(cluster)
+set.seed(101)
+# define the clustering function
+pam1 <- function(x,k) 
+  list(cluster = pam(x,k, cluster.only=TRUE))
+
+# calculate the gap statistic
+pam.gap= clusGap(t(mat), FUN = pam1, K.max = 8,B=50)
+
+# plot the gap statistic across k values
+plot(pam.gap, main = "Gap statistic for the Leukemia data")
+
+```
+Gap statistic method shows that k = 7 is the best but if we consider the error bars in the figure, k = 6 will be the lowest optimal number of clusters. Previous Silhouette method gave us k = 4 as an optimal number so they are not the same numbers. But our biological group number is 5 so we can say our k = 4 or k = 6 is close to the biological value. Also, it may show the possibility of "not yet found" biological subgroups.
+
+
+### Dimension reduction
+We will be using the leukemia expression data set again. You can use it as shown in the clustering exercises.
+
+1. Do PCA on the expression matrix using the `princomp()` function and then use the `screeplot()` function to visualize the explained variation by eigenvectors. How many top components explain 95% of the variation? [Difficulty: **Beginner**]
+
+**solution:**
+```{r}
+# Calculate the PCA with scaled data
+pr= princomp(scale(mat))
+summary(pr)
+
+# Visualize the explained variation by eigenvectors
+screeplot(pr)
+
+```
+Comp25 has 0.952356961 of cumulative proportion. So, top 25 components explain 95% of the variation.
+
+2. Our next tasks are removing the eigenvectors and reconstructing the matrix using SVD, then we need to calculate the reconstruction error as the difference between the original and the reconstructed matrix. HINT: You have to use the `svd()` function and equalize eigenvalue to $0$ for the component you want to remove. [Difficulty: **Intermediate/Advanced**]
+
+**solution:**
+```{r}
+d=svd(scale(mat)) # apply SVD
+
+# Reconstructing the matrix using SVD
+new_comp <- append(d$d[1:25], c(rep(0, 35)))
+diag(new_comp)
+mat.re <- d$u %*% diag(new_comp) %*% t(d$v)
+colnames(mat.re) <- colnames(mat)
+# Calculate the reconstruction error
+# We can calculate the root mean squared error calculation
+
+rmse = sqrt(mean((mat - mat.re) ** 2))
+rmse
+# Or use the package from Metrics
+library(Metrics)
+rmse(mat, mat.re)
+```
+The root mean square error is 5.793702.
+
+3. Produce a 10-component ICA from the expression data set. Remove each component and measure the reconstruction error without that component. Rank the components by decreasing reconstruction-error. [Difficulty: **Advanced**]
+
+**solution:**
+```{r}
+library(fastICA)
+ica.res=fastICA(t(mat),n.comp=10) # apply ICA
+re.mat <- ica.res$S %*% ica.res$A
+#re.mat
+rmse(t(mat), re.mat)
+
+# Remove component i and calculate the reconstruction error without that component.
+Error <- c()
+for (i in 1:10){
+  re.mat <- ica.res$S[, -i] %*% ica.res$A[-i, ]
+  Error[i] <- rmse(t(mat), re.mat)
+  
+}
+df <- data.frame(comp = c(1:10),
+                 err = Error)
+
+order(df$err)
+```
+When we order the errors by decreasing reconstruction-error, we get "removing" component from the order is the best to reduce the error.
+Also, we can easily visualize the results by this simple line graph.
+
+```{r}
+library(ggplot2)
+# graph for the Errors after removing each component
+g <- ggplot(data = df, aes(x = comp, y = err)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal()
+
+g + scale_x_continuous(breaks = c(1:10))
+```
+
+4. In this exercise we use the `Rtsne()` function on the leukemia expression data set. Try to increase and decrease perplexity t-sne, and describe the observed changes in 2D plots. [Difficulty: **Beginner**]
+
+**solution:**
+put your text here
+```{r}
+library("Rtsne")
+
+# set the leukemia type annotation for each sample
+annotation_col = data.frame(
+                    LeukemiaType =substr(colnames(mat),1,3))
+rownames(annotation_col)=colnames(mat)
+
+tsne_out <- Rtsne(t(mat),perplexity = 2) # Run TSNE
+
+# Show the objects in the 2D tsne representation
+plot(tsne_out$Y,col=as.factor(annotation_col$LeukemiaType),
+     pch=19,  main="perplexity = 2")
+
+# create the legend for the Leukemia types
+legend("bottomleft",
+       legend=unique(annotation_col$LeukemiaType),
+       fill =palette("default"),
+       border=NA,box.col=NA)
+
+# Produce perplexity 8
+tsne_out <- Rtsne(t(mat),perplexity = 8) # Run TSNE
+
+# Show the objects in the 2D tsne representation
+plot(tsne_out$Y,col=as.factor(annotation_col$LeukemiaType),
+     pch=19, main="perplexity = 8")
+
+# create the legend for the Leukemia types
+legend("bottomleft",
+       legend=unique(annotation_col$LeukemiaType),
+       fill =palette("default"),
+       border=NA,box.col=NA)
+
+# Produce perplexity 15 tsne
+tsne_out <- Rtsne(t(mat),perplexity = 15) # Run TSNE
+
+# Show the objects in the 2D tsne representation
+plot(tsne_out$Y,col=as.factor(annotation_col$LeukemiaType),
+     pch=19, main="perplexity=15")
+
+# create the legend for the Leukemia types
+legend("bottomleft",
+       legend=unique(annotation_col$LeukemiaType),
+       fill =palette("default"),
+       border=NA,box.col=NA)
+ 
+```
+When we reduced perplexity to 2, the t-SNE plot showed very poor separations among different samples. Although we can see the better separations when we increased perplexity, we don't see that much of improvement after certain numbers of perplexity. (Perplexity=15 was not significantly better than perplexity = 8.)
