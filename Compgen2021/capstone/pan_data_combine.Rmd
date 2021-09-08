@@ -1,0 +1,98 @@
+---
+title: "Capstone"
+author: "Yuna Son"
+date: "8/24/2021"
+output: pdf_document
+---
+```{r}
+#read.delim(R.utils::gunzip("data/CCLE/drug_response/TRAMETINIB.tsv.gz"))
+#install.packages("foreach")
+#BiocManager::install("preprocessCore")
+#necessary libraries
+library(reshape2)
+library(data.table)
+library(dplyr)
+library(caret)
+library(tidyverse)
+library(doParallel)
+library(preprocessCore)
+library(foreach)
+library(FactoMineR)
+library(xgboost)
+library(kernlab)
+
+setwd("D:/Compgen2021")
+#set the memory
+memory.size(32000000000)
+
+cores = 4 #number of the cores to be used
+#start the parallelization
+Mycluster <- makeCluster(cores) ; registerDoParallel(Mycluster)
+```
+
+# Read CCLE multi-omics and Drug response Data
+```{r}
+
+PDX_cnv_pan <- read.delim("data/PDX_all/oncoKB_intersect_genes/cnv.tsv") %>%
+  dplyr::rename(cell_lines = X)
+
+#read the data
+PDX_mut_pan <- read.delim("data/PDX_all/oncoKB_intersect_genes/mut.tsv")
+
+
+PDX_mut_pan = dcast(data = PDX_mut_pan, formula = Sample ~ Gene, value.var='HGVSp',  fun.aggregate=length) %>%
+dplyr::rename(cell_lines = Sample)
+
+# Test if there is missing values.
+
+anyNA(PDX_mut_pan)
+anyNA(PDX_cnv_pan)
+
+
+
+#saveRDS(PDX_mut_pan,"PDX_mut_pan.rds") #save the data as a RDS file
+
+#Now open a new session then you can read and assign the data as a data frame
+#PDX_mut_pan <- as.data.frame(readRDS("PDX_mut_pan.rds"))
+
+
+```
+
+```{r}
+#Read The Drug Response Data
+PDX_alpelisib <- read.delim("data/PDX_all/drug_response/ALPELISIB.tsv") %>%
+  dplyr::rename(cell_lines = sample_id) %>%
+  select(cell_lines,value)
+
+#Read The Drug Response Data
+PDX_buparlisib <- read.delim("data/PDX_all/drug_response/BUPARLISIB.tsv") %>%
+  dplyr::rename(cell_lines = sample_id) %>%
+  select(cell_lines,value)
+
+#Read The Drug Response Data
+PDX_cetuximab <- read.delim("data/PDX_all/drug_response/CETUXIMAB.tsv") %>%
+  dplyr::rename(cell_lines = sample_id) %>%
+  select(cell_lines,value)
+
+#Read The Drug Response Data
+PDX_erlotinib <- read.delim("data/PDX_all/drug_response/ERLOTINIB.tsv") %>%
+  dplyr::rename(cell_lines = sample_id) %>%
+  select(cell_lines,value)
+
+#Read The Drug Response Data
+PDX_trametinib <- read.delim("data/PDX_all/drug_response/TRAMETINIB.tsv") %>%
+  dplyr::rename(cell_lines = sample_id) %>%
+  select(cell_lines,value)
+```
+
+```{r}
+
+#filter the mutation values that has SD less than 0.1
+PDX_mut_pan <- PDX_mut_pan[,c(TRUE,matrixStats::colSds(as.matrix(PDX_mut_pan[,-1]))>0.1)]
+```
+
+```{r}
+head(PDX_cnv_pan)
+head(PDX_mut_pan)
+
+```
